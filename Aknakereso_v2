@@ -1,0 +1,227 @@
+using System;
+
+namespace Aknakereso
+{
+    class Aknakereso
+    {
+        public static void AknakeresoMezoFeltoltes(int N, int M, int K)
+        {
+            // mátrix létrehozása
+            int[,] m = new int[N, M];
+            // soronkénti aknák száma
+            int aknak_szamlalo_soronkent = 0;
+            int aknakszama = 0;
+            // soronkénti mezők száma
+            int elemek_szama_soronkent = 0;
+            //Mátrix feltöltése
+            for (int i = 0; i < N; i++)
+            {
+                for (int j = 0; j < M; j++)
+                {
+                    //Random objektum létrehozása:
+                    Random r = new Random();
+                    //Mezőértékek bekérése
+                    Console.ForegroundColor = ConsoleColor.White;
+                    //Console.WriteLine("Kérem {0},{1}_elem_értékét (1: akna, 2: nem akna): ", i, j);
+                    //A generált szám létrehozása és eltárolása:
+                    int random_elem = r.Next(1, 3);
+
+                    if (random_elem == 1) //akna
+                    { aknak_szamlalo_soronkent++; 
+                    elemek_szama_soronkent++;
+
+                        if ((aknak_szamlalo_soronkent > K) & (elemek_szama_soronkent < N))
+                        {
+                            m[i, j] = 2;
+                        }
+
+                        else if ((aknak_szamlalo_soronkent <= K) & (elemek_szama_soronkent < N))
+                        {
+                            m[i, j] = random_elem;
+                            aknakszama++;
+                        }
+
+                        else if ((aknak_szamlalo_soronkent > K) & (elemek_szama_soronkent == N))
+                        {
+                            m[i, j] = 2;
+                            elemek_szama_soronkent = 0;
+                            aknak_szamlalo_soronkent = 0;
+                        }
+
+                        else if ((aknak_szamlalo_soronkent <= K) & (elemek_szama_soronkent == N))
+                        {
+                            m[i, j] = random_elem;
+                            elemek_szama_soronkent = 0;
+                            aknak_szamlalo_soronkent = 0;
+                            aknakszama++;
+                        }
+                    }
+
+                    else //2 a kapott érték, azaz nem akna
+                    {
+                        if (elemek_szama_soronkent < N)
+                        {
+                            m[i, j] = random_elem;
+                        }
+
+                        else if (elemek_szama_soronkent == N)
+                        {
+                            elemek_szama_soronkent = 0;
+                            aknak_szamlalo_soronkent = 0;
+                        }
+                    }
+                }
+            }
+            Console.WriteLine("Aknák száma: " + aknakszama);
+            //játékmező kiíratása aknák mutatásával:
+            //Matrixok.Matrixkiiratas(N, M, m);
+            //játék indítása
+            Aknakereso.Jatek(m, aknakszama, N, M);
+        }
+
+        //játékmező kiíratása aknák mutatásával
+        public static void Matrixkiiratas(int N, int M, int[,] m)
+        {
+            Aknakereso.MezoSzele(M);
+
+            for (int i = 0; i < N; i++)
+             {
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(i);
+                for (int j = 0; j < M; j++)
+                {
+                    if (m[i, j] == 1)
+                    { Console.BackgroundColor = ConsoleColor.Red;
+                        Console.Write( m[i, j]);
+                        Console.BackgroundColor = ConsoleColor.Black;
+                    }
+                    else
+                    { if (m[i, j] == 2)
+                        {
+                            Console.BackgroundColor = ConsoleColor.Green;
+                            Console.Write(m[i, j]);
+                            Console.BackgroundColor = ConsoleColor.Black;
+                        }
+                    }
+                }
+                Console.WriteLine();
+            }
+        }
+        //játékmező kiíratása aknák mutatásával - vége
+
+        //kiíratás játékhoz
+        public static void MatrixkiiratasJatek(int N, int M, int[,] m, int aknakszama)
+        {
+            int elemszam = 0;
+
+            Aknakereso.MezoSzele(M);
+
+            for (int i = 0; i < N; i++)
+            {
+                Console.ForegroundColor = ConsoleColor.White; 
+                Console.Write(i);
+                for (int j = 0; j < M; j++)
+                {
+                    if (m[i, j] == 1)
+                    {
+
+                        Console.BackgroundColor = ConsoleColor.White;
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.Write(m[i, j]);
+                        Console.BackgroundColor = ConsoleColor.Black;
+                                           }
+                    else
+                    {
+                        if (m[i, j] == 2)
+                        {
+                            Console.BackgroundColor = ConsoleColor.White;
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.Write(m[i, j]);
+                            Console.BackgroundColor = ConsoleColor.Black;
+                        }
+
+                        else 
+                        {
+                            elemszam++;
+                            Console.BackgroundColor = ConsoleColor.Blue;
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                            Console.Write(m[i, j]);
+                            Console.BackgroundColor = ConsoleColor.Black;
+
+                            if (elemszam == m.Length-aknakszama)
+                            {
+                                Console.BackgroundColor = ConsoleColor.Black;
+                                Console.ForegroundColor = ConsoleColor.White;
+                                Console.WriteLine("Nyertél!");
+
+                            }
+                        }
+                    }
+                }
+                Console.WriteLine();
+            }
+        }
+        //kiíratás játékhoz vége
+
+        // mező szélének kiírása
+        public static void MezoSzele(int M)
+        {
+            Console.Write("*");
+            for (int j = 0; j < M; j++)
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write(j);
+            }
+            Console.WriteLine();
+        }
+        // mező szélének kiírása - vége
+
+        //játék
+
+        public static void Jatek(int[,] m, int aknakszama, int N, int M)
+        {
+            
+            for (int elemszam = 0;  elemszam < (m.Length-aknakszama); elemszam++)
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("Kérem a sor értékét: ");
+                int i = int.Parse(Console.ReadLine());
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("Kérem az oszlop értékét: ");
+                int j = int.Parse(Console.ReadLine());
+                if (m[i, j] == 1)
+                {
+                    Console.WriteLine("Vége a játéknak! :(");
+                    break;
+                }
+                else
+                {
+                    m[i, j] = 3;
+                    
+                    Aknakereso.MatrixkiiratasJatek(N, M, m, aknakszama);
+                    
+                }
+            }
+                      
+        }
+          
+        //játék vége
+    }
+
+    class Program
+    {
+                
+            static void Main(string[] args)
+        {
+            Console.WriteLine("Add meg a mező magasságát: ");
+            int N = int.Parse(Console.ReadLine()); // magasság
+            Console.WriteLine("Add meg a mező szélességét: ");
+            int M = int.Parse(Console.ReadLine()); // szélesség
+            
+            Console.WriteLine("Add meg a soronkénti aknák maximális számát: ");
+            int K = int.Parse(Console.ReadLine()); // soronkénti aknák száma
+            Aknakereso.AknakeresoMezoFeltoltes(N, M, K);
+            Console.ReadKey();
+        }
+    }
+}
